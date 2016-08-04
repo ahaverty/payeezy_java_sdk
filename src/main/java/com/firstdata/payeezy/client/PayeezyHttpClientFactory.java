@@ -1,17 +1,17 @@
 package com.firstdata.payeezy.client;
 
+import cz.msebera.android.httpclient.HttpHost;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.config.RequestConfig;
+import cz.msebera.android.httpclient.config.Registry;
+import cz.msebera.android.httpclient.config.RegistryBuilder;
+import cz.msebera.android.httpclient.conn.socket.ConnectionSocketFactory;
+import cz.msebera.android.httpclient.conn.socket.PlainConnectionSocketFactory;
+import cz.msebera.android.httpclient.conn.ssl.SSLConnectionSocketFactory;
+import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
+import cz.msebera.android.httpclient.impl.conn.PoolingHttpClientConnectionManager;
+import cz.msebera.android.httpclient.ssl.SSLContextBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
@@ -42,8 +42,7 @@ public class PayeezyHttpClientFactory {
                     .register("https", sslConnectionSocketFactory)
                     .register("http", new PlainConnectionSocketFactory())
                     .build();
-            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(
-                    socketFactoryRegistry);
+            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
             cm.setMaxTotal(Integer.valueOf(DEFAULT_MAX_TOTAL_CONNECTIONS));
             cm.setDefaultMaxPerRoute(Integer.valueOf(DEFAULT_MAX_CONNECTIONS_PER_ROUTE));
             RequestConfig requestConfig = RequestConfig.custom()

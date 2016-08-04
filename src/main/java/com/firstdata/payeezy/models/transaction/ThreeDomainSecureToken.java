@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.codec.binary.Base64;
+
+import java.util.Base64;
 
 
 @JsonAutoDetect(getterVisibility = Visibility.DEFAULT, setterVisibility = Visibility.NONE,
@@ -164,7 +165,7 @@ public class ThreeDomainSecureToken extends Card {
     public String getApplicationDataDecoded() {
         String appData = getApplicationData();
         if (appData == null) return null;
-        byte[] b = Base64.decodeBase64(appData.getBytes());
+        byte[] b = Base64.getDecoder().decode(appData.getBytes());
         return new String(b);
     }
     

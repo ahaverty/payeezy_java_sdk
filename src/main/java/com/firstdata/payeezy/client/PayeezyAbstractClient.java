@@ -3,12 +3,12 @@ package com.firstdata.payeezy.client;
 import com.firstdata.payeezy.api.APIResourceConstants;
 import com.firstdata.payeezy.api.PayeezyRequestOptions;
 import com.firstdata.payeezy.models.transaction.PayeezyResponse;
-import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,13 +68,8 @@ public abstract class PayeezyAbstractClient {
             buff.append(payload);
         }
         String bufferData = buff.toString();
-        //MessageLogger.logMessage(String.format(bufferData));
         byte[] macHash = mac.doFinal(bufferData.getBytes("UTF-8"));
-        //MessageLogger.logMessage(Integer.toString(macHash.length));
-        //MessageLogger.logMessage(String.format("MacHAsh:{}" , macHash));
-        String authorizeString = new String(Base64.encodeBase64(toHex(macHash)));
-        //   MessageLogger.logMessage(String.format("Authorize:{}" , authorizeString));
-        return authorizeString;
+        return Base64.getEncoder().encodeToString(macHash);
     }
 
     /**
@@ -95,8 +90,8 @@ public abstract class PayeezyAbstractClient {
         return sb.toString();
     }
 
-//    protected abstract PayeezyResponse executePostRequest(String uri, String payload, PayeezyRequestOptions requestOptions) throws Exception;
-//
-//    protected abstract PayeezyResponse executeGetRequest(String uri, Map<String, String> queryParams) throws Exception;
+    protected abstract PayeezyResponse executePostRequest(String uri, String payload, PayeezyRequestOptions requestOptions) throws Exception;
+
+    protected abstract PayeezyResponse executeGetRequest(String uri, Map<String, String> queryParams) throws Exception;
 
 }
