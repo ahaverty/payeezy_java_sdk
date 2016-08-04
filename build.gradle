@@ -1,7 +1,12 @@
-apply plugin: 'java'
 apply plugin: 'maven'
 
 group = 'com.github.ahaverty'
+
+allprojects {
+    apply plugin: 'java'
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
 
 repositories {
     jcenter()
