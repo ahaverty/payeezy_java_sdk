@@ -4,6 +4,7 @@ import com.firstdata.payeezy.api.APIResourceConstants;
 import com.firstdata.payeezy.api.PayeezyRequestOptions;
 import com.firstdata.payeezy.api.RequestMethod;
 import com.firstdata.payeezy.models.transaction.PayeezyResponse;
+import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -35,48 +36,50 @@ public class PayeezyClient extends PayeezyAbstractClient {
 
     private PayeezyHttpClientFactory payeezyHttpClient;
 
-    public PayeezyClient(Properties properties){
+    public PayeezyClient(Properties properties) {
         payeezyHttpClient = new PayeezyHttpClientFactory(properties);
     }
 
     /**
      * Reads the required credentials and the host information from VCAP_SERVICES variables
      * making it cloudfoundry aware
+     *
      * @param method
      * @param payload
      * @return
      * @throws Exception
      */
-    public PayeezyResponse execute(RequestMethod method, Object payload) throws Exception{
+    public PayeezyResponse execute(RequestMethod method, Object payload) throws Exception {
         String envString = System.getenv("VCAP_SERVICES");
         String apikey = null;
         String token = null;
         String secret = null;
         String url = null;
         JSONParser jsonParser = new JSONParser();
-        try{
+        try {
             JSONObject vcapServiceObject = (JSONObject) jsonParser.parse(envString);
             JSONArray payeezyJsonArray = (JSONArray) vcapServiceObject.get("payeezy-service");
-            JSONObject payeezyObject = (JSONObject)payeezyJsonArray.get(0);
-            if(payeezyObject != null){
+            JSONObject payeezyObject = (JSONObject) payeezyJsonArray.get(0);
+            if (payeezyObject != null) {
                 JSONObject credentialsObject = (JSONObject) payeezyObject.get("credentials");
                 apikey = (String) credentialsObject.get("apikey");
                 token = (String) credentialsObject.get("token");
                 secret = (String) credentialsObject.get("secret");
                 url = (String) credentialsObject.get("uri");
-                if(url != null && !url.contains("https")){
-                    url = "https://"+url;
+                if (url != null && !url.contains("https")) {
+                    url = "https://" + url;
                 }
             }
-        }catch (ParseException ex){
+        } catch (ParseException ex) {
             ex.printStackTrace();
         }
         PayeezyRequestOptions requestOptions = new PayeezyRequestOptions(apikey, token, secret);
-        return  execute(url, method, requestOptions, payload);
+        return execute(url, method, requestOptions, payload);
     }
 
     /**
      * Method that executes a GET and POST for the provided payload
+     *
      * @param URL
      * @param method
      * @param requestOptions
@@ -84,12 +87,13 @@ public class PayeezyClient extends PayeezyAbstractClient {
      * @return
      * @throws Exception
      */
-    public PayeezyResponse execute(String URL, RequestMethod method, PayeezyRequestOptions requestOptions, Object payload) throws Exception{
-        switch (method){
+    public PayeezyResponse execute(String URL, RequestMethod method, PayeezyRequestOptions requestOptions, Object payload) throws Exception {
+        Gson gson = new Gson();
+        switch (method) {
             case GET:
-                return executeGetRequest(URL,(Map<String,String>) payload);
+                return executeGetRequest(URL, (Map<String,String>) payload);
             case POST:
-                return executePostRequest(URL,(String) payload,requestOptions);
+                return executePostRequest(URL, (String) payload, requestOptions);
             default:
                 throw new Exception("Unsupported Request Method");
         }
@@ -111,13 +115,14 @@ public class PayeezyClient extends PayeezyAbstractClient {
         // Create a custom response handler
         ResponseHandler<PayeezyResponse> responseHandler = new ResponseHandler<PayeezyResponse>() {
 
-           public PayeezyResponse handleResponse(final HttpResponse response) throws IOException {
-               return getResponse(response);
+            public PayeezyResponse handleResponse(final HttpResponse response) throws IOException {
+                return getResponse(response);
             }
 
         };
         return httpClient.execute(httpPost, responseHandler);
     }
+
 
     /**
      * Execute a Get Request
@@ -131,14 +136,15 @@ public class PayeezyClient extends PayeezyAbstractClient {
         HttpGet httpGet = new HttpGet(buildURI);
         HttpClient httpClient = payeezyHttpClient.getHttpClient();
         ResponseHandler<PayeezyResponse> responseHandler = new ResponseHandler<PayeezyResponse>() {
-                public PayeezyResponse handleResponse(final HttpResponse response) throws IOException {
-                    return getResponse(response);
-                }
-            };
+            public PayeezyResponse handleResponse(final HttpResponse response) throws IOException {
+                return getResponse(response);
+            }
+        };
         return httpClient.execute(httpGet, responseHandler);
     }
 
-    private PayeezyResponse getResponse(HttpResponse response) throws IOException{
+
+    private PayeezyResponse getResponse(HttpResponse response) throws IOException {
         int status = response.getStatusLine().getStatusCode();
         HttpEntity entity = response.getEntity();
         String responseBody = entity != null ? EntityUtils.toString(entity) : null;
@@ -170,32 +176,34 @@ public class PayeezyClient extends PayeezyAbstractClient {
 
     /**
      * Create Post Connection
+     *
      * @param uri
      * @param payload
      * @param requestOptions
      * @return
      * @throws Exception
      */
-    private HttpPost createPostConnection(String uri, String payload, PayeezyRequestOptions requestOptions) throws  Exception{
+    private HttpPost createPostConnection(String uri, String payload, PayeezyRequestOptions requestOptions) throws Exception {
         HttpPost post = new HttpPost(uri);
-        setHttpHeaders(post,payload, requestOptions );
+        setHttpHeaders(post, payload, requestOptions);
         return post;
     }
 
     /**
      * Set the HTTP Headers required for the request
+     *
      * @param httpPost
      * @param payload
      * @param requestOptions
      * @throws Exception
      */
 
-    private void setHttpHeaders(HttpPost httpPost, String payload, PayeezyRequestOptions requestOptions) throws  Exception{
-        Map<String, String> keyMap = getSecurityKeys( payload, requestOptions);
-        Iterator<String> iter=keyMap.keySet().iterator();
-        while(iter.hasNext()) {
-            String key=iter.next();
-            if(APIResourceConstants.SecurityConstants.PAYLOAD.equals(key))
+    private void setHttpHeaders(HttpPost httpPost, String payload, PayeezyRequestOptions requestOptions) throws Exception {
+        Map<String, String> keyMap = getSecurityKeys(payload, requestOptions);
+        Iterator<String> iter = keyMap.keySet().iterator();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            if (APIResourceConstants.SecurityConstants.PAYLOAD.equals(key))
                 continue;
             httpPost.setHeader(key, keyMap.get(key));
         }

@@ -1,6 +1,6 @@
 package com.firstdata.payeezy.client;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -73,14 +73,12 @@ public class PayeezyHttpClientFactory {
             }
 
             httpClient = clientBuilder.build();
-        } catch (NoSuchAlgorithmException ex) {
-            ex.printStackTrace();
-        } catch (KeyManagementException ex){
+        } catch (NoSuchAlgorithmException | KeyManagementException ex){
             ex.printStackTrace();
         }
     }
     
-    public HttpClient getHttpClient() {
+    HttpClient getHttpClient() {
         return httpClient;
     }
 }

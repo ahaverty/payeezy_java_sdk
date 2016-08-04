@@ -38,10 +38,7 @@ public class JSONHelper {
             ObjectMapper mapper = new ObjectMapper();
             obj = mapper.readValue(jsonInput,classType);
         }
-        catch(JsonParseException parseException){
-            parseException.printStackTrace();
-        }
-        catch (Exception e) {
+        catch(IOException e) {
            e.printStackTrace();
         }
         return obj;

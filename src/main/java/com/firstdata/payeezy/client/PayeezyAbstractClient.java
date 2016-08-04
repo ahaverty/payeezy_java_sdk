@@ -18,9 +18,9 @@ import java.util.Map;
  */
 public abstract class PayeezyAbstractClient {
 
-    protected Map<String,String> getSecurityKeys(String payLoad, PayeezyRequestOptions requestOptions) throws Exception{
-        Map<String,String> returnMap=new HashMap<String, String>();
-        if(requestOptions == null){
+    Map<String, String> getSecurityKeys(String payLoad, PayeezyRequestOptions requestOptions) throws Exception {
+        Map<String, String> returnMap = new HashMap<>();
+        if (requestOptions == null) {
             throw new Exception("Payeezy Request Options not set");
         }
         try {
@@ -35,19 +35,20 @@ public abstract class PayeezyAbstractClient {
             return returnMap;
         } catch (NoSuchAlgorithmException e) {
             MessageLogger.logMessage(e.getMessage());
-            throw new RuntimeException(e.getMessage(),e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
     /**
      * Builds the authorization string that will sent as part of the Request Header
+     *
      * @param data
      * @return
      * @throws Exception
      */
-    private String getMacValue(Map<String,String> data) throws Exception{
-        Mac mac=Mac.getInstance("HmacSHA256");
-        String apiSecret= data.get(APIResourceConstants.SecurityConstants.APISECRET);
+    private String getMacValue(Map<String, String> data) throws Exception {
+        Mac mac = Mac.getInstance("HmacSHA256");
+        String apiSecret = data.get(APIResourceConstants.SecurityConstants.APISECRET);
         SecretKeySpec secret_key = new SecretKeySpec(apiSecret.getBytes(), "HmacSHA256");
         mac.init(secret_key);
         String apikey = data.get(APIResourceConstants.SecurityConstants.APIKEY);
@@ -56,19 +57,19 @@ public abstract class PayeezyAbstractClient {
         String token = data.get(APIResourceConstants.SecurityConstants.TOKEN);
         String payload = data.get(APIResourceConstants.SecurityConstants.PAYLOAD);
 
-        StringBuilder buff=new StringBuilder();
+        StringBuilder buff = new StringBuilder();
         buff.append(apikey)
                 .append(nonce)
                 .append(timeStamp);
-        if(token!=null){
+        if (token != null) {
             buff.append(token);
         }
-        if(payload != null){
+        if (payload != null) {
             buff.append(payload);
         }
         String bufferData = buff.toString();
         //MessageLogger.logMessage(String.format(bufferData));
-        byte[] macHash=mac.doFinal(bufferData.getBytes("UTF-8"));
+        byte[] macHash = mac.doFinal(bufferData.getBytes("UTF-8"));
         //MessageLogger.logMessage(Integer.toString(macHash.length));
         //MessageLogger.logMessage(String.format("MacHAsh:{}" , macHash));
         String authorizeString = new String(Base64.encodeBase64(toHex(macHash)));
@@ -78,23 +79,24 @@ public abstract class PayeezyAbstractClient {
 
     /**
      * Converts the bytes to Hex bytes
+     *
      * @param arr
      * @return
      */
     private byte[] toHex(byte[] arr) {
-        String hex= byteArrayToHex(arr);
+        String hex = byteArrayToHex(arr);
         return hex.getBytes();
     }
 
     private String byteArrayToHex(byte[] a) {
         StringBuilder sb = new StringBuilder(a.length * 2);
-        for(byte b: a)
+        for (byte b : a)
             sb.append(String.format("%02x", b & 0xff));
         return sb.toString();
     }
 
-    protected abstract PayeezyResponse executePostRequest(String uri, String payload, PayeezyRequestOptions requestOptions) throws Exception;
-
-    protected abstract PayeezyResponse executeGetRequest(String uri, Map<String, String> queryParams) throws Exception;
+//    protected abstract PayeezyResponse executePostRequest(String uri, String payload, PayeezyRequestOptions requestOptions) throws Exception;
+//
+//    protected abstract PayeezyResponse executeGetRequest(String uri, Map<String, String> queryParams) throws Exception;
 
 }

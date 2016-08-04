@@ -1,4 +1,4 @@
-package firstdata.payeezy.samples;
+package com.firstdata.payeezy.samples;
 
 import com.firstdata.payeezy.PayeezyClientHelper;
 import com.firstdata.payeezy.models.transaction.*;

@@ -2,6 +2,7 @@ package com.firstdata.payeezy.client;
 
 import com.firstdata.payeezy.JSONHelper;
 import com.firstdata.payeezy.PayeezyClientHelper;
+import com.firstdata.payeezy.api.APIResourceConstants;
 import com.firstdata.payeezy.api.PayeezyRequestOptions;
 import com.firstdata.payeezy.models.transaction.*;
 import org.apache.http.HttpStatus;
@@ -21,10 +22,10 @@ public class PayeezyClientHelperTest {
     PayeezyRequestOptions requestOptions;
     JSONHelper jsonHelper;
 
-    private static final String APIKEY = "kJ0bejUU3FrAUSAKp6DHZYDkdFKYgcj9"; //"y6pWAJNyJyjGv66IsVuWnklkKUPFbb0a";
-    private static final String SECURE_SECRET = "49b1d4dbe0446711d1435f2a32ce2eea55dfe8681fc2e1c9666b8e5b5218ffe8";//"86fbae7030253af3cd15faef2a1f4b67353e41fb6799f576b5093ae52901e6f7";
-    private static final String TOKEN = "fdoa-a480ce8951daa73262734cf102641994c1e55e7cdf4c02b6";
-    private static final String DCC_OKEN =    "fdoa-d790ce8951daa73262645cf102641994c1e55e7cdf4c03c8";
+    private static final String APIKEY = PayeezyClientHelper.getProperties().getProperty(APIResourceConstants.PropertyConstants.API_KEY); //"y6pWAJNyJyjGv66IsVuWnklkKUPFbb0a";
+    private static final String SECURE_SECRET = PayeezyClientHelper.getProperties().getProperty(APIResourceConstants.PropertyConstants.PZ_SECRET); //"86fbae7030253af3cd15faef2a1f4b67353e41fb6799f576b5093ae52901e6f7";
+    private static final String TOKEN = PayeezyClientHelper.getProperties().getProperty(APIResourceConstants.PropertyConstants.TOKEN);
+    private static final String DCC_OKEN =    PayeezyClientHelper.getProperties().getProperty(APIResourceConstants.PropertyConstants.TOKEN);
     private String GIFT_CARD_NUMBER = "7777045839985463";
 
     @Before
@@ -63,7 +64,7 @@ public class PayeezyClientHelperTest {
     }*/
 
     @Test
-    public void doCreditCardAuthorization(){
+    public void doCreditCardAuthorization() {
         TransactionRequest transactionRequest = new TransactionRequest();
         transactionRequest.setAmount("100"); // ex: $1.00
         transactionRequest.setTransactionType(TransactionType.AUTHORIZE.name().toLowerCase());
@@ -429,7 +430,6 @@ public class PayeezyClientHelperTest {
             ex.printStackTrace();
             Assert.fail("Transaction failed");
         }
-
     }
 
 

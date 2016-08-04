@@ -1,0 +1,12 @@
+{
+  //Placeholder properties, please alter to your own settings
+  "js_security_key": "js-c1092384m09824234809845k4354wer",
+  "url": "https://api-cert.payeezy.com",
+  "pzsecret": "78329hs83g27h0jsh72988563sjs32h897hdsj23h7d",
+  "token": "fdoa-987j39dh798h239j7h987dj237hhf4dj894s7h23d4s2",
+  "apikey": "x23489n7273nm9823jsnd89723m283",
+  "printjson": false,
+  "timeout": 500,
+  "proxyHost": "",
+  "proxyPort": ""
+}

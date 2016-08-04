@@ -1,6 +1,5 @@
 package com.firstdata.payeezy.models.exception;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Messages {

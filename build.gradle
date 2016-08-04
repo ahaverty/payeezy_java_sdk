@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.github.ahaverty'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    testCompile 'junit:junit:4.12'
+
+    compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+
+    compile 'org.apache.commons:commons-lang3:3.4'
+
+    compile('com.googlecode.json-simple:json-simple:1.1.1')
+
+    //May not work for android: http://stackoverflow.com/a/32065636/2276198
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
+
+    compile 'com.google.code.gson:gson:2.2.+'
+
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+}
